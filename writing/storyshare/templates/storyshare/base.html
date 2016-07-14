@@ -1,0 +1,13 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %} {% endblock %}</title>
+        <link href="{% static 'storyshare/main.css' %}" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

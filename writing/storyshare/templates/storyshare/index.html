@@ -1,0 +1,9 @@
+{% extends "storyshare/base.html" %}
+
+{% block title %}Write!{% endblock %}
+{% block content %}
+    {% if request.user %}
+    Hello {{ request.user }}!
+    {% endif %}
+    <textarea id="input" placeholder="Hello world...!"></textarea>
+{% endblock %}
