@@ -1,0 +1,7 @@
+{% extends 'storyshare/base.html' %}
+
+{% block title %}Viewing "{{ writing.title }}" by {{ writing.author }}{% endblock %}
+
+{% block content %}
+    {{ writing.text }}
+{% endblock %}

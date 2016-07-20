@@ -1,0 +1,16 @@
+{% extends 'storyshare/base.html' %}
+
+{% block title %}Write!{% endblock %}
+
+{% block content %}
+{% for err in errors %}
+    {{ err }}
+{% endfor %}
+
+<form action="/write" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save!</button>
+</form>
+
+{% endblock %}

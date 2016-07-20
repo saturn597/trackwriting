@@ -7,6 +7,16 @@
         <link href="{% static 'storyshare/main.css' %}" rel="stylesheet" type="text/css">
     </head>
     <body>
+        <ul id="nav">
+            <li><a href="{% url 'storyshare:index' %}">Home</a></li><!--
+            {% if user.is_authenticated %}
+                --><li><a href="{% url 'storyshare:write' %}">Write!</a></li><!--
+                --><li><a href="{% url 'storyshare:logout' %}">Log out</a></li>
+            {% else %}
+                --><li><a href="{% url 'storyshare:login' %}">Login</a></li><!--
+                --><li><a href="{% url 'storyshare:register' %}">Register</a></li>
+            {% endif %}
+        </ul>
         {% block content %}
         {% endblock %}
     </body>

@@ -1,6 +1,54 @@
-textarea {
-    border: 2px solid green;
+/*
+ * colors: http://paletton.com/#uid=7060u0kkHE0arTkg7LRoSxhuwtj
+ */
+
+
+body, html {
+    background-color: white;
+    font-family: "Helvetica Neue",Arial,sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+#nav a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+#nav a:hover {
+    background-color: #2888a2;
+}
+
+#nav {
+    background-color: #0b7491;
+    display: block;
     font-size: 1.3em;
+    list-style-type: none;
+    margin: 0 auto;
+    padding: 9px 3px;
+    text-align: right;
+}
+
+#nav li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+ol {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+textarea {
+    border: 2px solid #0b7491;
+    border-radius: 10px;
+    display: block;
+    font-size: 1.3em;
+    margin: 0 auto;
     height: 30em;
     width: 30em;
 }

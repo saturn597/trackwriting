@@ -1,9 +1,17 @@
 {% extends "storyshare/base.html" %}
 
-{% block title %}Write!{% endblock %}
+{% block title %}Welcome!{% endblock %}
 {% block content %}
-    {% if request.user %}
-    Hello {{ request.user }}!
-    {% endif %}
-    <textarea id="input" placeholder="Hello world...!"></textarea>
+    <div>
+        {% if request.user.is_authenticated %}
+        <p>Hello {{ request.user }}!</p>
+            <ol>
+                {% for writing in recents %}
+                    <li>
+                        <a href="{% url 'storyshare:viewwriting' writing.url_id %}">{{ writing.title }}</a>
+                    </li>
+                {% endfor %}
+            </ol>
+        {% endif %}
+    </div>
 {% endblock %}

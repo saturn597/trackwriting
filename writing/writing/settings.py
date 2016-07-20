@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storyshare.apps.StoryshareConfig',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -73,6 +74,7 @@ WSGI_APPLICATION = 'writing.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
+# Override in local_settings.py
 
 DATABASES = {
     'default': {
@@ -119,6 +121,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Custom settings
+LOGIN_REDIRECT_URL = '/'
 
 
 # Import local_settings
