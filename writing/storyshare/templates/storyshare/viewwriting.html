@@ -3,5 +3,8 @@
 {% block title %}Viewing "{{ writing.title }}" by {{ writing.author }}{% endblock %}
 
 {% block content %}
-    {{ writing.text }}
+    <h1>{{ writing.title }}</h1>
+    by
+    <h2>{{ writing.author }}</h2>
+    <div class="story">{{ writing.text }}</div>
 {% endblock %}

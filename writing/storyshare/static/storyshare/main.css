@@ -26,7 +26,7 @@ body, html {
     display: block;
     font-size: 1.3em;
     list-style-type: none;
-    margin: 0 auto;
+    margin: 0 auto 4em auto;
     padding: 9px 3px;
     text-align: right;
 }
@@ -41,6 +41,12 @@ ol {
     list-style-type: none;
     margin: 0;
     padding: 0;
+}
+
+.story {
+    margin: 50px auto;
+    padding: 2em;
+    width: 33em;
 }
 
 textarea {

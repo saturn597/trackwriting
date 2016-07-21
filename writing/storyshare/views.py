@@ -3,8 +3,8 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
-from .models import Writing
 from .forms import WritingForm
+from .models import Writing
 
 from base64 import urlsafe_b64encode
 from uuid import uuid4
