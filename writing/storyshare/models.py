@@ -6,6 +6,10 @@ from django.db import models
 import base64
 import uuid
 
+class Preferences(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    num_words = models.PositiveIntegerField(default=100)
+
 class Writing(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     url_id = models.CharField(

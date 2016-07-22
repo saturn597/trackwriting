@@ -3,6 +3,7 @@
 {% block title %}Welcome!{% endblock %}
 {% block content %}
     <div>
+        <h1>Write Helper</h1>
         {% if request.user.is_authenticated %}
         <p>Hello {{ request.user }}!</p>
             <ol>
