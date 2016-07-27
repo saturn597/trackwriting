@@ -7,7 +7,7 @@
     {{ err }}
 {% endfor %}
 
-<form action="/write" method="POST">
+<form action="{% url 'storyshare:write' %}" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save!</button>

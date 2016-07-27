@@ -3,8 +3,10 @@ This is intended to be a webapp to help people keep up a regular writing habit.
 
 Simple first pass implementation:
 --------
-When user first logs in, prompt them to say how many words they want to write
+When user first registers, prompt them to say how many words they want to write
 per day. 
+
+Allow changing that in preferences.
 
 User home page (what they see on subsequent logins) shows a listing of the past
 week with checkmarks next to days they completed the goal.
@@ -22,8 +24,6 @@ Listing of their previous writing, with next/prev buttons to cycle through it.
 
 Possible later passes:
 -------
-Allow changing the goal
-
 When they go to a previous writing, they can edit it. Need to have edits apply
 toward word count in a sensible way. I'm thinking: store each "edit" as just a
 separate writing object, but keep track of word count. Probably for simplicity

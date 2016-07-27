@@ -12,22 +12,10 @@
     User already exists!
 {% endif %}
 
-<form action="/register" method="post">
+<form action="{% url 'storyshare:index' %}" method="post">
     {% csrf_token %}
-    <div>
-        <label for="username">Username: </label>
-        <input type="text" id="username" name="username" autocomplete="username" />
-    </div>
-
-    <div>
-        <label for="password">Password: </label>
-        <input type="password" id="password" name="password" autocomplete="new-password" />
-    </div>
-
-    <div>
-        <label for="email">Email address: </label>
-        <input type="email" id="email" name="email" autocomplete="email" />
-    </div>
+    {{ user_creation_form.as_p }}
+    {{ prefs_form.as_p }}
 
     <div>
         <button type="submit">Register!</button>

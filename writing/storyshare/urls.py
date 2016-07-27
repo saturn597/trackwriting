@@ -17,6 +17,8 @@ urlpatterns = [
         { 'next_page': '/' },
         name="logout"),
 
+    url(r'^preferences$', views.preferences, name='preferences'),
+
     url(r'^register$', views.register, name='register'),
 
     url(r'^viewwriting/([a-zA-Z0-9_\-=]+)', views.view_writing, name='viewwriting'),

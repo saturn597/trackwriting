@@ -1,41 +1,84 @@
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.utils import timezone
 
-from .forms import WritingForm
+from .forms import PreferencesForm, WritingForm
 from .models import Writing
 
 from base64 import urlsafe_b64encode
 from uuid import uuid4
 
+import datetime
+
+def get_date(date_time, tz):
+    date = tz.normalize(date_time.astimezone(tz)).date()
+    return date
+
 def index(request):
     context = {}
     if request.user.is_authenticated():
-        context['recents'] = Writing.objects.filter(author=request.user).order_by('-time')[:50]
+        days_back = 7
+        tz = timezone.get_current_timezone()
+        user_date = get_date(timezone.now(), tz)
+
+        context['recents'] = Writing.objects.filter(
+            author=request.user).order_by(
+            '-time')[:50]
+
+        # get list of days representing the current period
+        period = [get_date(timezone.now(), tz) - datetime.timedelta(days=x)
+                for x in range(0, 7)]
+
+        # get the writings written during that period
+        period_writings = Writing.objects.filter(
+            author=request.user,
+            time__date__gt=user_date-datetime.timedelta(days=days_back))
+
+        context['daily_writings'] = [{
+            'when': date,
+            'writings': [
+                w for w in period_writings if get_date(w.time, tz) == date]
+            }
+            for date in period]
+
     return render(request, 'storyshare/index.html', context)
 
-def register(request):
-    template = 'storyshare/register.html'
+def preferences(request):
+    prefs_form = PreferencesForm(instance=request.user.preferences)
+    success = False
 
     if request.POST:
-        try:
-            username = request.POST['username']
-            password = request.POST['password']
-            email = request.POST['email']
-        except KeyError:
-            # Somehow a field wasn't filled in
-            return render(request, template, {'missing_field': True})
+        prefs_form = PreferencesForm(request.POST, instance=request.user.preferences)
 
+        if prefs_form.is_valid():
+            prefs_form.save()
+            success = True
 
-        if User.objects.filter(username=username).exists():
-            return render(request, template, {'user_exists': True})
+    return render(request, 'storyshare/preferences.html', {'form': prefs_form, 'success': success})
 
-        user = User.objects.create_user(username, email, password)
-        user.save()
-        return HttpResponseRedirect(reverse('storyshare:index'))
+def register(request):
+    prefs_form = PreferencesForm()
+    user_creation_form = UserCreationForm()
 
-    return render(request, template)
+    if request.POST:
+        user_creation_form = UserCreationForm(request.POST)
+        prefs_form = PreferencesForm(request.POST)
+
+        if user_creation_form.is_valid() and prefs_form.is_valid():
+            user = user_creation_form.save()
+            prefs = prefs_form.save(commit=False)
+            prefs.user = user
+            prefs.save()
+            user.save()
+            return HttpResponseRedirect(reverse('storyshare:index'))
+
+    return render(request, 'storyshare/register.html', {
+            'user_creation_form': user_creation_form,
+            'prefs_form': prefs_form,
+        })
 
 def view_writing(request, id):
     print(id)
@@ -55,22 +98,23 @@ def write(request):
         form = WritingForm(request.POST)
 
         url_id = generate_url_id()
+
         if not url_id:
             # generate_url_id may return None if it can't find an unused id.
-            errors.append('Something odd happened! We recommend you save your'
+            form.add_error(None, 'Something odd happened! We recommend you save your'
                     ' work off site.')
-        elif form.is_valid():
+
+        if form.is_valid():
             story = form.save(commit=False)
             story.author = request.user
             story.url_id = url_id
             story.save()
             return HttpResponseRedirect(reverse('storyshare:index'))
 
-    return render(request, 'storyshare/write.html', {'form': form, 'errors': errors})
+    return render(request, 'storyshare/write.html', {'form': form})
 
 
 def generate_url_id():
-    return None
     for _ in range(1, 10):
         url_id = urlsafe_b64encode(uuid4().bytes)[:5]
         if not Writing.objects.filter(url_id=url_id).exists():

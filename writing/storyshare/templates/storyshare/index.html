@@ -5,14 +5,22 @@
     <div>
         <h1>Write Helper</h1>
         {% if request.user.is_authenticated %}
-        <p>Hello {{ request.user }}!</p>
+            <p>Hello {{ request.user }}!</p>
             <ol>
                 {% for writing in recents %}
                     <li>
-                        <a href="{% url 'storyshare:viewwriting' writing.url_id %}">{{ writing.title }}</a>
+                        <a href="{% url 'storyshare:viewwriting' writing.url_id %}">{{ writing.title }} {{ writing.time }}</a>
                     </li>
                 {% endfor %}
             </ol>
+            {% for day in daily_writings %}
+                <p>
+                    <em>{{ day.when }}</em>
+                    {% for w in day.writings %}
+                        {{ w.title }} |
+                    {% endfor %}
+                </p>
+            {% endfor %}
         {% endif %}
     </div>
 {% endblock %}
