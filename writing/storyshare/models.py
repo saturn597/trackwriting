@@ -4,11 +4,21 @@ from django.contrib.auth.models import User
 from django.db import models
 
 import base64
+import pytz
 import uuid
 
+MAX_TZ_LENGTH = max([len(tz) for tz in pytz.common_timezones])
+
+TIMEZONE_CHOICES = [[tz, tz] for tz in pytz.common_timezones]
+
 class Preferences(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     num_words = models.PositiveIntegerField()
+
+    timezone = models.CharField(
+        max_length=MAX_TZ_LENGTH, 
+        choices=TIMEZONE_CHOICES)
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return 'Preferences for %s' % self.user.username

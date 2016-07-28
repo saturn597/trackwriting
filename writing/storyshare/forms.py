@@ -3,10 +3,12 @@ from django import forms
 
 from .models import Preferences, Writing
 
+import pytz
+
 class PreferencesForm(forms.ModelForm):
     class Meta:
         model = Preferences
-        fields = ['num_words']
+        fields = ['num_words', 'timezone']
         labels = {
                 'num_words': 'How many words do you want to write per day?',
                 }
