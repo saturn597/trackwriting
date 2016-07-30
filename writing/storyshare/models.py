@@ -11,6 +11,7 @@ MAX_TZ_LENGTH = max([len(tz) for tz in pytz.common_timezones])
 
 TIMEZONE_CHOICES = [[tz, tz] for tz in pytz.common_timezones]
 
+
 class Preferences(models.Model):
     num_words = models.PositiveIntegerField()
 
@@ -23,15 +24,19 @@ class Preferences(models.Model):
     def __str__(self):
         return 'Preferences for %s' % self.user.username
 
+
 class Writing(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     time = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100)
+
     url_id = models.CharField(
             max_length=10,
             unique=True,
             )
+
+    user_date = models.DateField()
 
     def __str__(self):
         return '%s by %s' % (self.title, self.author.username)

@@ -22,27 +22,26 @@ def index(request):
     if request.user.is_authenticated():
         days_back = 7
         tz = timezone.get_current_timezone()
-        user_date = get_date(timezone.now(), tz)
+        current_user_date = get_date(timezone.now(), tz)
 
         context['recents'] = Writing.objects.filter(
             author=request.user).order_by(
             '-time')[:50]
 
-        # get list of days representing the current period
-        period = [get_date(timezone.now(), tz) - datetime.timedelta(days=x)
-                for x in range(0, 7)]
+        # construct a list of days representing the current period
+        period = [current_user_date - datetime.timedelta(days=x)
+                for x in range(0, days_back)]
 
         # get the writings written during that period
         period_writings = Writing.objects.filter(
             author=request.user,
-            time__date__gt=user_date-datetime.timedelta(days=days_back))
+            user_date__in=period)
 
         context['daily_writings'] = [{
             'when': date,
             'writings': [
-                w for w in period_writings if get_date(w.time, tz) == date]
-            }
-            for date in period]
+                w for w in period_writings if w.user_date == date]
+            } for date in period]
 
     return render(request, 'storyshare/index.html', context)
 
