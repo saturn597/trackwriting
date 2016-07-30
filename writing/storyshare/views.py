@@ -32,16 +32,19 @@ def index(request):
         period = [current_user_date - datetime.timedelta(days=x)
                 for x in range(0, days_back)]
 
-        # get the writings written during that period
+        # get the writings from that period
         period_writings = Writing.objects.filter(
             author=request.user,
             user_date__in=period)
 
-        context['daily_writings'] = [{
-            'when': date,
-            'writings': [
-                w for w in period_writings if w.user_date == date]
-            } for date in period]
+        context['daily_writings'] = []
+        for date in period:
+            writings = [w for w in period_writings if w.user_date == date]
+            context['daily_writings'].append({
+                'when': date,
+                'writings': writings,
+                'wordcount': sum(len(w.text.split()) for w in writings),
+                })
 
     return render(request, 'storyshare/index.html', context)
 

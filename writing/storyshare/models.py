@@ -36,6 +36,7 @@ class Writing(models.Model):
             unique=True,
             )
 
+    # The date the writing was completed in user-local time
     user_date = models.DateField()
 
     def __str__(self):

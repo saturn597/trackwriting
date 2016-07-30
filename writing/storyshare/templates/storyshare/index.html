@@ -15,7 +15,13 @@
             </ol>
             {% for day in daily_writings %}
                 <p>
-                    <em>{{ day.when }}</em>
+                    <strong>{{ day.when }}</strong>
+                    <em>{{ day.wordcount }}</em>
+                    {% if day.wordcount >= request.user.preferences.num_words %}
+                        GOAL ACHEIVED
+                    {% else %}
+                        Fell short of goal.
+                    {% endif %}
                     {% for w in day.writings %}
                         {{ w.title }} |
                     {% endfor %}
