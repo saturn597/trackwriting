@@ -126,7 +126,7 @@ STATIC_URL = '/static/'
 
 # Custom settings
 LOGIN_REDIRECT_URL = '/'
-
+LOGIN_URL='/login'
 
 # Import local_settings
 

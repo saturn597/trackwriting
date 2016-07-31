@@ -6,6 +6,8 @@
         <h1>Write Helper</h1>
         {% if request.user.is_authenticated %}
             <p>Hello {{ request.user }}!</p>
+            <h3>Current Streak: {{ current_streak }}</h3>
+            <h3>Longest Streak: {{ longest_streak }}</h3>
             <ol>
                 {% for writing in recents %}
                     <li>
@@ -17,7 +19,7 @@
                 <p>
                     <strong>{{ day.when }}</strong>
                     <em>{{ day.wordcount }}</em>
-                    {% if day.wordcount >= request.user.preferences.num_words %}
+                    {% if day.wordcount >= request.user.userinfo.num_words %}
                         GOAL ACHEIVED
                     {% else %}
                         Fell short of goal.

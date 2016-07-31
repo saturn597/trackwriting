@@ -12,7 +12,7 @@
     User already exists!
 {% endif %}
 
-<form action="{% url 'storyshare:index' %}" method="post">
+<form action="{% url 'storyshare:register' %}" method="post">
     {% csrf_token %}
     {{ user_creation_form.as_p }}
     {{ prefs_form.as_p }}

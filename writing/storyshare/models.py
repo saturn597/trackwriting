@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 import base64
 import pytz
@@ -12,7 +13,14 @@ MAX_TZ_LENGTH = max([len(tz) for tz in pytz.common_timezones])
 TIMEZONE_CHOICES = [[tz, tz] for tz in pytz.common_timezones]
 
 
-class Preferences(models.Model):
+class UserInfo(models.Model):
+    current_streak = models.PositiveIntegerField(default=0)
+
+    # The date the user last completed their goal (in user-local time)
+    last_goal_met = models.DateField(blank=True, null=True)
+
+    longest_streak = models.PositiveIntegerField(default=0)
+
     num_words = models.PositiveIntegerField()
 
     timezone = models.CharField(

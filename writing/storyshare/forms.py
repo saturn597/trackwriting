@@ -1,13 +1,13 @@
 from django.contrib.auth.models import User
 from django import forms
 
-from .models import Preferences, Writing
+from .models import UserInfo, Writing
 
 import pytz
 
 class PreferencesForm(forms.ModelForm):
     class Meta:
-        model = Preferences
+        model = UserInfo
         fields = ['num_words', 'timezone']
         labels = {
                 'num_words': 'How many words do you want to write per day?',

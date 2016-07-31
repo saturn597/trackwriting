@@ -21,6 +21,11 @@ Link to page where they can write.
 
 Listing of their previous writing, with next/prev buttons to cycle through it.
 
+Show "today" sensibly on index page.
+
+Make sure initial login makes sense (shouldn't say "failed to reach goal" for a
+bunch of days when you just signed up)
+
 
 Possible later passes:
 -------
