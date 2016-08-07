@@ -11,8 +11,6 @@ Allow changing that in preferences.
 User home page (what they see on subsequent logins) shows a listing of the past
 week with checkmarks next to days they completed the goal.
 
-They get a "free" checkmark for the day they created their account
-
 Also show stats: current streak length in days; longest streak; % of last 100
 days where goal was completed. Also, number of words they still need to
 complete that day.
@@ -29,6 +27,14 @@ bunch of days when you just signed up)
 
 Possible later passes:
 -------
+Make reporting well-behaved for "streaks" and past days successes/failures even
+when the user changes their goal. Currently, "streaks" in the past will look
+the same even with a change in goal. However, changing the goal will change
+whether a past day is shown as "failing" or succeeding. This could be fixed by
+allowing a user to "add" or "delete" goals, which would then be tied to
+specific dates, rather than having just one goal for everything which then gets
+messed up when it changes.
+
 When they go to a previous writing, they can edit it. Need to have edits apply
 toward word count in a sensible way. I'm thinking: store each "edit" as just a
 separate writing object, but keep track of word count. Probably for simplicity

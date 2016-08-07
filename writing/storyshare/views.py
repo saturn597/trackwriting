@@ -18,14 +18,23 @@ import pytz
 
 def index(request):
     context = {}
-    if request.user.is_authenticated():
-        days_back = 15
-        tz = timezone.get_current_timezone()
-        current_user_date = get_current_user_date(request.user)
+    user = request.user
+    if user.is_authenticated():
 
-        context['recents'] = Writing.objects.filter(
-            author=request.user).order_by(
-            '-time')[:50]
+        userinfo = user.userinfo
+
+        recents = Writing.objects.filter(
+            author=user).order_by(
+            '-time')[:10]
+
+        tz = timezone.get_current_timezone()
+        current_user_date = get_current_user_date(user)
+
+        # We'll look at a period of 1 week, but don't look at dates earlier
+        # than when the user joined.
+        join_date = get_date(user.date_joined, tz)
+        days_since_join = (current_user_date - join_date).days
+        days_back = min(10, days_since_join + 1)
 
         # construct a list of days representing the current period
         period = [current_user_date - datetime.timedelta(days=x)
@@ -38,27 +47,43 @@ def index(request):
 
         # assign those writings to bins according to date so they can be
         # organized in our template
-        daily_writings = OrderedDict()
+        # TODO: currently I'm not reporting everything that goes into these
+        # bins.  I could either add more to the reporting or just not report
+        # everything in the bins.
+        writings_by_day = OrderedDict()
         for date in period:
-            daily_writings[date] = {
+            writings_by_day[date] = {
                         'when': date,
                         'writings': [],
                         'wordcount': 0,
                     }
 
         for w in period_writings:
-            d = daily_writings[w.user_date]
+            d = writings_by_day[w.user_date]
             d['writings'].append(w)
             d['wordcount'] += len(w.text.split())
 
-        context['daily_writings'] = daily_writings.values()
+        writings_by_day = list(writings_by_day.values())
+        todays_writings = writings_by_day[0]
+        writings_by_day = writings_by_day[1:]
 
-        if not request.user.userinfo.last_goal_met in period[0:2]:
-            request.user.userinfo.current_streak = 0
-            request.user.userinfo.save()
+        # Set up context
+        context['recents'] = recents
 
-        context['current_streak'] = request.user.userinfo.current_streak
-        context['longest_streak'] = request.user.userinfo.longest_streak
+        context['today'] = current_user_date
+
+        context['todays_writings'] = todays_writings
+        context['writings_by_day'] = writings_by_day
+
+        context['goal'] = userinfo.num_words
+        context['words_left'] = context['goal'] - todays_writings['wordcount']
+
+        if not userinfo.last_goal_met in period[0:2]:
+            userinfo.current_streak = 0
+            userinfo.save()
+
+        context['current_streak'] = userinfo.current_streak
+        context['longest_streak'] = userinfo.longest_streak
 
     return render(request, 'storyshare/index.html', context)
 
@@ -107,7 +132,6 @@ def view_writing(request, id):
 @login_required
 def write(request):
     form = WritingForm()
-    errors = []
 
     url_id = generate_url_id()
 
@@ -133,7 +157,7 @@ def write(request):
             yesterday = today - datetime.timedelta(days=1)
 
             # see if we met the goal for the day
-            writings_today = Writing.objects.filter(user_date=today)
+            writings_today = Writing.objects.filter(author=story.author, user_date=today)
             word_count_today = sum(len(w.text.split()) for w in writings_today)
             if word_count_today >= info.num_words:
                 if not info.last_goal_met or info.last_goal_met < yesterday:

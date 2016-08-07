@@ -3,6 +3,9 @@
  */
 
 
+
+/*** Sitewide ***/
+
 body, html {
     background-color: white;
     font-family: "Helvetica Neue",Arial,sans-serif;
@@ -11,10 +14,29 @@ body, html {
     text-align: center;
 }
 
+h1,h2,h3 {
+    font-weight: normal;
+}
+
+ul, ol {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#content {
+    margin: 0 auto;
+    width: 750px;
+}
+
+
+
+/*** Nav bar ***/
+
 #nav a {
     color: #ffffff;
     text-decoration: none;
-    padding: 10px 15px;
+    padding: 1em;
 }
 
 #nav a:hover {
@@ -26,8 +48,8 @@ body, html {
     display: block;
     font-size: 1.3em;
     list-style-type: none;
-    margin: 0 auto 4em auto;
-    padding: 1.5em;
+    margin: 0 auto 50px auto;
+    padding: 27px;
     text-align: right;
 }
 
@@ -37,24 +59,125 @@ body, html {
     padding: 0;
 }
 
-ol {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+
+
+/*** Index page ***/
+
+.cross {
+    color: red;
 }
 
-.story {
-    margin: 50px auto;
-    padding: 2em;
-    width: 33em;
+.check {
+    color: green;
+}
+
+#today .cross, #today .check {
+    font-size: 4em;
+}
+
+.date {
+    margin-right: 2em;
+}
+
+#content li {
+    margin-top: 1em;
+}
+
+#previousdays {
+    float: left;
+    margin: 0;
+    text-align: left;
+    width: 350px;
+}
+
+#recentwritings {
+    float: right;
+    margin: 0;
+    overflow: hidden;
+    text-align: right;
+    width: 350px;
+}
+
+#streaks div {
+    display: inline-block;
+    font-weight: bold;
+    margin: 0 20px;
+}
+
+
+
+/*** Forms ***/
+
+button {
+    border: 1px outset #0b7491;
+    background-color: white;
+    border-radius: 10px;
+    font-size: 1.3em;
+    padding: 0 16px;
+}
+
+button:hover {
+    background-color: #9fd8e8;
+}
+
+button:active {
+    background-color: #6bbbd1;
 }
 
 textarea {
-    border: 2px solid #0b7491;
     border-radius: 10px;
+    border: 1px outset #0b7491;
     display: block;
     font-size: 1.3em;
+    padding: 0 16px;
+    height: 600px;
+    width: 716px;
+}
+
+select {
+    font-size: 1.3em;
+}
+
+input {
+    border: 1px outset #0b7491;
+    border-radius: 10px;
+    font-size: 1.3em;
+    padding: 0 16px;
+}
+
+.errorlist {
+    color: red;
+    font-weight: bold;
+}
+
+#writeform {
+    font-size: 1.3em;
+    position: relative;
+    text-align: right;
+}
+
+#writeform label {
+    display: none;
+}
+
+#writeform button {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+
+
+/*** Story display ***/
+
+.story {
     margin: 0 auto;
-    height: 30em;
-    width: 30em;
+    padding: 0;
+    text-align: left;
+    white-space: pre-wrap;
+    width: 600px;
+}
+
+#storyheading {
+    margin: 100px auto;
 }

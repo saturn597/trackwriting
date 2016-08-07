@@ -18,7 +18,9 @@
                 --><li><a href="{% url 'storyshare:register' %}">Register</a></li>
             {% endif %}
         </ul>
-        {% block content %}
-        {% endblock %}
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
     </body>
 </html>

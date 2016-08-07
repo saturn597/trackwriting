@@ -3,8 +3,11 @@
 {% block title %}Viewing "{{ writing.title }}" by {{ writing.author }}{% endblock %}
 
 {% block content %}
-    <h1>{{ writing.title }}</h1>
-    by
-    <h2>{{ writing.author }}</h2>
+    <a href="{% url 'storyshare:index' %}">Return to main page</a>
+    <div id="storyheading">
+        <h1>{{ writing.title }}</h1>
+        by
+        <h2>{{ writing.author }}</h2>
+    </div>
     <div class="story">{{ writing.text }}</div>
 {% endblock %}

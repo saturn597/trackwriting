@@ -6,6 +6,7 @@
 {% if success %}
     Preferences saved!
 {% endif %}
+<h1>Preferences for {{ request.user.username }}</h1>
 <form action="{% url 'storyshare:preferences' %}" method="POST">
         {% csrf_token %}
         {{ form.as_p }}

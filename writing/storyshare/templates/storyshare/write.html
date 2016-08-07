@@ -3,11 +3,8 @@
 {% block title %}Write!{% endblock %}
 
 {% block content %}
-{% for err in errors %}
-    {{ err }}
-{% endfor %}
-
-<form action="{% url 'storyshare:write' %}" method="POST">
+<h1>Write!</h1>
+<form action="{% url 'storyshare:write' %}" method="POST" id="writeform">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Save!</button>

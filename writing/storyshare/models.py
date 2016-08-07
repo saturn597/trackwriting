@@ -24,7 +24,7 @@ class UserInfo(models.Model):
     num_words = models.PositiveIntegerField()
 
     timezone = models.CharField(
-        max_length=MAX_TZ_LENGTH, 
+        max_length=MAX_TZ_LENGTH,
         choices=TIMEZONE_CHOICES)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
