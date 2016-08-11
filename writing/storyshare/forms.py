@@ -9,8 +9,11 @@ class PreferencesForm(forms.ModelForm):
     class Meta:
         model = UserInfo
         fields = ['num_words', 'timezone']
-        labels = {
+        help_texts = {
                 'num_words': 'How many words do you want to write per day?',
+                }
+        labels = {
+                'num_words': 'Words per day:',
                 }
         error_messages = {
                     'num_words': {

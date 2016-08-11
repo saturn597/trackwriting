@@ -24,7 +24,7 @@ ul, ol {
     padding: 0;
 }
 
-#content {
+main {
     margin: 0 auto;
     width: 750px;
 }
@@ -79,7 +79,7 @@ ul, ol {
     margin-right: 2em;
 }
 
-#content li {
+main li {
     margin-top: 1em;
 }
 
@@ -104,7 +104,12 @@ ul, ol {
     margin: 0 20px;
 }
 
-
+#history p {
+    display: inline-block;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    margin-top: 0;
+}
 
 /*** Forms ***/
 
@@ -124,11 +129,27 @@ button:active {
     background-color: #6bbbd1;
 }
 
+form p {
+    margin-bottom: 50px;
+}
+
+label {
+    display: inline-block;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.helptext {
+    display: block;
+    margin-top: 10px;
+}
+
 textarea {
     border-radius: 10px;
     border: 1px outset #0b7491;
     display: block;
     font-size: 1.3em;
+    margin-top: 20px;
     padding: 0 16px;
     height: 600px;
     width: 716px;
