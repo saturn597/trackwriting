@@ -11,9 +11,9 @@
         <div id="today">
             <h2>Goal: <strong>{{ goal }}</strong> words per day.</h2>
             {% if words_left > 0 %}
-                <span class="cross">✗</span>
+                <span class="ongoinggoal">―</span>
             {% else %}
-                <span class="check">✔</span>
+                <span class="metgoal">✔</span>
             {% endif %}
             <p>So far today, you've written {{ todays_writings.wordcount }} words.</p>
             {% if words_left > 0 %}
@@ -36,25 +36,33 @@
         <hr>
 
         <div id="history">
-
             <h2>History</h2>
             <div id="previousdays">
                 <h3>Daily history</h3>
                     <p>
-                        <span class="check">✔</span>: met daily goal |
-                        <span class="cross">✗</span>: didn't meet goal
+                        <span class="metgoal">✔</span>: met daily goal |
+                        <span class="ongoinggoal">―</span>: haven't met goal yet |
+                        <span class="failedgoal">✗</span>: didn't meet goal
                         {% if not writings_by_day %}
                             <p>You only registered today, so there's nothing to display here yet.</p>
                         {% endif %}
                     </p>
                 <ol>
+                    <li>
+                        <span class="date">{{ today }}</span>
+                        {% if words_left > 0 %}
+                            <span class="ongoinggoal">―</span>
+                        {% else %}
+                            <span class="metgoal">✔<span>
+                        {% endif %}
+                    </li>
                     {% for day in writings_by_day %}
                         <li>
                             <span class="date">{{ day.when }}</span>
                             {% if day.wordcount >= goal %}
-                                <span class="check">✔<span>
+                                <span class="metgoal">✔<span>
                             {% else %}
-                                <span class="cross">✗</span>
+                                <span class="failedgoal">✗</span>
                             {% endif %}
                         </li>
                     {% endfor %}
@@ -65,7 +73,7 @@
                 <h3>Recent writings</h3>
                      <p>
                         {% if recents %}
-                            Your past few writings.
+                            Your past {{ recents|length }} writings.
                         {% else %}
                             <p>
                                 You haven't written anything yet! Why not

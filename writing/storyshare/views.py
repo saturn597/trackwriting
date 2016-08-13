@@ -19,8 +19,11 @@ import pytz
 def index(request):
     context = {}
     user = request.user
-    if user.is_authenticated():
 
+    if not user.is_authenticated():
+        return render(request, 'storyshare/landing.html')
+
+    else:
         userinfo = user.userinfo
 
         recents = Writing.objects.filter(
@@ -102,7 +105,7 @@ def preferences(request):
     return render(request, 'storyshare/preferences.html', {'form': prefs_form, 'success': success})
 
 def register(request):
-    prefs_form = PreferencesForm()
+    prefs_form = PreferencesForm(initial={"timezone": "US/Eastern",})
     user_creation_form = UserCreationForm()
 
     if request.POST:

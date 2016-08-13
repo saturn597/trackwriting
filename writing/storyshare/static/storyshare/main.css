@@ -1,5 +1,5 @@
 /*
- * colors: http://paletton.com/#uid=7060u0kkHE0arTkg7LRoSxhuwtj
+ * http://paletton.com/#uid=33o0u0kxzw85NTGh3HaIggMUR7t 
  */
 
 
@@ -29,27 +29,42 @@ main {
     width: 750px;
 }
 
+a {
+    border-bottom: 1px dotted #057d9f;
+    color: #057d9f;
+    text-decoration: none;
+}
 
+a:hover {
+    color: #5fadc3; 
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #057d9f;
+}
 
 /*** Nav bar ***/
 
 #nav a {
+    border: none;
     color: #ffffff;
+    display: inline-block;
     text-decoration: none;
     padding: 1em;
 }
 
 #nav a:hover {
-    background-color: #2888a2;
+    background-color: #5fadc3;
 }
 
 #nav {
-    background-color: #0b7491;
+    background-color: #057d9f;
     display: block;
     font-size: 1.3em;
     list-style-type: none;
     margin: 0 auto 50px auto;
-    padding: 27px;
     text-align: right;
 }
 
@@ -63,15 +78,24 @@ main {
 
 /*** Index page ***/
 
-.cross {
+.failedgoal {
     color: red;
 }
 
-.check {
+.metgoal {
     color: green;
 }
 
-#today .cross, #today .check {
+.ongoinggoal {
+    color: blue;
+    font-weight: bold;
+}
+
+#today .failedgoal, #today .metgoal, #today .ongoinggoal {
+    font-size: 4em;
+}
+
+div.failedgoal, div.metgoal, div.ongoinggoal {
     font-size: 4em;
 }
 
@@ -79,8 +103,18 @@ main {
     margin-right: 2em;
 }
 
-main li {
+main ol {
     margin-top: 1em;
+    border: 1px dotted #aaa;
+}
+
+main li {
+    border-top: 1px dotted #aaa;
+    padding: 0.5em 0.5em;
+}
+
+main li:first-child {
+    border: 1px none #aaa;
 }
 
 #previousdays {
@@ -88,6 +122,10 @@ main li {
     margin: 0;
     text-align: left;
     width: 350px;
+}
+
+#previousdays ol {
+    width: 250px;
 }
 
 #recentwritings {
@@ -111,10 +149,22 @@ main li {
     margin-top: 0;
 }
 
+
+
+/*** No auth index***/
+
+#intro p {
+   margin: 30px 0;
+}
+
+#intro strong {
+    font-size: 1.5em;
+}
+
 /*** Forms ***/
 
 button {
-    border: 1px outset #0b7491;
+    border: 1px outset #5fadc3;
     background-color: white;
     border-radius: 10px;
     font-size: 1.3em;
@@ -122,11 +172,11 @@ button {
 }
 
 button:hover {
-    background-color: #9fd8e8;
+    background-color: #c0e0e9;
 }
 
 button:active {
-    background-color: #6bbbd1;
+    background-color: #5fadc3;
 }
 
 form p {
@@ -146,7 +196,7 @@ label {
 
 textarea {
     border-radius: 10px;
-    border: 1px outset #0b7491;
+    border: 1px outset #5fadc3;
     display: block;
     font-size: 1.3em;
     margin-top: 20px;
@@ -160,7 +210,7 @@ select {
 }
 
 input {
-    border: 1px outset #0b7491;
+    border: 1px outset #057d9f;
     border-radius: 10px;
     font-size: 1.3em;
     padding: 0 16px;
@@ -186,7 +236,6 @@ input {
     top: 0;
     left: 0;
 }
-
 
 
 /*** Story display ***/
