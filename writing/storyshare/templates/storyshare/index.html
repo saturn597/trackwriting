@@ -15,7 +15,7 @@
             {% else %}
                 <span class="metgoal">✔</span>
             {% endif %}
-            <p>So far today, you've written {{ todays_writings.wordcount }} words.</p>
+            <p>So far today, you've written {{ todays_wordcount }} words.</p>
             {% if words_left > 0 %}
                 <p>You still have {{ words_left }} words left to write today to meet your goal.</p>
                 <p>Why not <a href="{% url 'storyshare:write' %}">write</a> a bit more?</p>
@@ -45,21 +45,17 @@
                         <span class="failedgoal">✗</span>: didn't meet goal
                     </p>
                 <ol>
-                    <li>
-                        <span class="date">{{ today }}</span>
-                        {% if words_left > 0 %}
-                            <span class="ongoinggoal">―</span>
-                        {% else %}
-                            <span class="metgoal">✔<span>
-                        {% endif %}
-                    </li>
-                    {% for day in writings_by_day %}
+                    {% for day, wordcount in words_by_day.items %}
                         <li>
-                            <span class="date">{{ day.when }}</span>
-                            {% if day.wordcount >= goal %}
+                            <span class="date">{{ day }}</span>
+                            {% if wordcount >= goal %}
                                 <span class="metgoal">✔<span>
                             {% else %}
-                                <span class="failedgoal">✗</span>
+                                {% if day == today %}
+                                    <span class="ongoinggoal">―</span>
+                                {% else %}
+                                    <span class="failedgoal">✗</span>
+                                {% endif %}
                             {% endif %}
                         </li>
                     {% endfor %}
@@ -70,7 +66,7 @@
                 <h3>Recent writings</h3>
                      <p>
                         {% if recents %}
-                            Your past {{ recents|length }} writings.
+                            Your latest writings.
                         {% else %}
                             <p>
                                 You haven't written anything yet! Why not

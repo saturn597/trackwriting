@@ -37,13 +37,19 @@ def index(request):
         # than when the user last reset.
         last_reset_userdate = get_date(userinfo.last_reset, tz)
         days_since_reset = (current_user_date - last_reset_userdate).days
+        days_since_reset = max(days_since_reset, 0)
         days_back = min(10, days_since_reset + 1)
 
         # construct a list of days representing the current period
         period = [current_user_date - datetime.timedelta(days=x)
                 for x in range(0, days_back)]
 
-        # get the writings from that period
+        # reset the current streak if user hasn't met their goal lately
+        if not userinfo.last_goal_met in period[0:2]:
+            userinfo.current_streak = 0
+            userinfo.save()
+
+        # get the writings from the current period
         period_writings = Writing.objects.filter(
             author=request.user,
             user_date__in=period
@@ -51,45 +57,23 @@ def index(request):
             time__lt=userinfo.last_reset
         )
 
-        # assign those writings to bins according to date so they can be
-        # organized in our template
-        # TODO: currently I'm not reporting everything that goes into these
-        # bins.  I could either add more to the reporting or just not report
-        # everything in the bins.
-        writings_by_day = OrderedDict()
-        for date in period:
-            writings_by_day[date] = {
-                        'when': date,
-                        'writings': [],
-                        'wordcount': 0,
-                    }
-
+        # How many words did the user complete for each day in the period?
+        words_by_day = OrderedDict.fromkeys(period, 0)
         for w in period_writings:
-            d = writings_by_day[w.user_date]
-            d['writings'].append(w)
-            d['wordcount'] += len(w.text.split())
+            words_by_day[w.user_date] += len(w.text.split())
 
-        writings_by_day = list(writings_by_day.values())
-        todays_writings = writings_by_day[0]
-        writings_by_day = writings_by_day[1:]
+        words_today = words_by_day[current_user_date]
 
-        # Set up context
-        context['recents'] = recents
-
-        context['today'] = current_user_date
-
-        context['todays_writings'] = todays_writings
-        context['writings_by_day'] = writings_by_day
-
-        context['goal'] = userinfo.num_words
-        context['words_left'] = context['goal'] - todays_writings['wordcount']
-
-        if not userinfo.last_goal_met in period[0:2]:
-            userinfo.current_streak = 0
-            userinfo.save()
-
-        context['current_streak'] = userinfo.current_streak
-        context['longest_streak'] = userinfo.longest_streak
+        context = {
+                'recents': recents,
+                'today': current_user_date,
+                'todays_wordcount': words_today,
+                'words_by_day': words_by_day,
+                'goal': userinfo.num_words,
+                'words_left': userinfo.num_words - words_today,
+                'current_streak': userinfo.current_streak,
+                'longest_streak': userinfo.longest_streak,
+        }
 
     return render(request, 'storyshare/index.html', context)
 
@@ -157,8 +141,8 @@ def write(request):
 
         if not url_id:
             # generate_url_id may return None if it can't find an unused id.
-            form.add_error(None, 'Something odd happened! We recommend you save your'
-                    ' work off site.')
+            form.add_error(None, 'Something odd happened! We recommend you'
+                    ' save your work off site.')
 
         if form.is_valid():
             story = form.save(commit=False)
@@ -172,7 +156,8 @@ def write(request):
             yesterday = today - datetime.timedelta(days=1)
 
             # see if we met the goal for the day
-            writings_today = Writing.objects.filter(author=story.author, user_date=today)
+            writings_today = Writing.objects.filter(author=story.author,
+                    user_date=today)
             word_count_today = sum(len(w.text.split()) for w in writings_today)
             if word_count_today >= info.num_words:
                 if not info.last_goal_met or info.last_goal_met < yesterday:
