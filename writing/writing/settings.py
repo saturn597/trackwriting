@@ -131,3 +131,5 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 # Custom settings
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL='/login'
+SHORT_RESULTS_PER_PAGE=10
+LONG_RESULTS_PER_PAGE=20

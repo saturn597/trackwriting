@@ -1,49 +1,54 @@
 {% extends "storyshare/base.html" %}
 
-{% block title %}Welcome!{% endblock %}
+{% load staticfiles %}
+
+{% block title %}Write tracker{% endblock %}
+
 {% block content %}
-    {% if request.user.is_authenticated %}
-        <h1>Write Helper</h1>
-        <p>Hello {{ request.user }}! Today is {{ today }}.</p>
+    <h1>Write Helper</h1>
+    <p>Hello {{ request.user }}! Today is {{ today }}.</p>
 
-        <hr>
+    <hr>
 
-        <div id="today">
-            <h2>Goal: <strong>{{ goal }}</strong> words per day.</h2>
-            {% if words_left > 0 %}
-                <span class="ongoinggoal">―</span>
-            {% else %}
-                <span class="metgoal">✔</span>
-            {% endif %}
-            <p>So far today, you've written {{ todays_wordcount }} words.</p>
-            {% if words_left > 0 %}
-                <p>You still have {{ words_left }} words left to write today to meet your goal.</p>
-                <p>Why not <a href="{% url 'storyshare:write' %}">write</a> a bit more?</p>
-            {% else %}
-                <p>You've met your goal for the day! Congratulations!
-            {% endif %}
-        </div>
+    <div id="today">
+        <h2>Goal: <strong>{{ goal }}</strong> words per day.</h2>
+        {% if words_left > 0 %}
+            <span class="ongoinggoal">―</span>
+        {% else %}
+            <span class="metgoal">✔</span>
+        {% endif %}
+        <p>So far today, you've written {{ todays_wordcount }} words.</p>
+        {% if words_left > 0 %}
+            <p>You still have {{ words_left }} words left to write today to meet your goal.</p>
+            <p>Why not <a href="{% url 'storyshare:write' %}">write</a> a bit more?</p>
+        {% else %}
+            <p>You've met your goal for the day! Congratulations!
+        {% endif %}
+    </div>
 
-        <hr>
+    <hr>
 
-        <div id="streaks">
-            <h2>Streaks</h2>
-            <div>Current Streak: {{ current_streak }}</div>
-            <div>Longest Streak: {{ longest_streak }}</div>
-            <p>Your current streak is the number of days in a row that you've met your goal.</p>
-        </div>
+    <div id="streaks">
+        <h2>Streaks</h2>
+        <div>Current Streak: {{ current_streak }}</div>
+        <div>Longest Streak: {{ longest_streak }}</div>
+        <p>Your current streak is the number of days in a row that you've met your goal.</p>
+    </div>
 
-        <hr>
+    <hr>
 
-        <div id="history">
-            <h2>History</h2>
-            <div id="previousdays">
-                <h3>Daily history</h3>
-                    <p>
-                        <span class="metgoal">✔</span>: met daily goal |
-                        <span class="ongoinggoal">―</span>: haven't met goal yet |
-                        <span class="failedgoal">✗</span>: didn't meet goal
-                    </p>
+    <div id="history">
+        <h2>History</h2>
+        <div id="previousdays">
+            <h3>Daily history</h3>
+                <p>
+                    <span class="metgoal">✔</span>: met daily goal |
+                    <span class="ongoinggoal">―</span>: haven't met goal yet |
+                    <span class="failedgoal">✗</span>: didn't meet goal
+                </p>
+                {% if not no_more_daily %}
+                    <a href="{% url 'storyshare:dailyhistory' %}">See more...</a>
+                {% endif %}
                 <ol>
                     {% for day, wordcount in words_by_day.items %}
                         <li>
@@ -60,29 +65,32 @@
                         </li>
                     {% endfor %}
                 </ol>
-            </div>
+        </div>
 
-            <div id="recentwritings">
-                <h3>Recent writings</h3>
-                     <p>
-                        {% if recents %}
-                            Your latest writings.
-                        {% else %}
-                            <p>
-                                You haven't written anything yet! Why not
-                                <a href="{% url 'storyshare:write' %}">start?</a>
-                            </p>
-                        {% endif %}
-                    </p>
-
-                    <ol>
+        <div id="recentwritings">
+            <h3>Recent writings</h3>
+                 <p>
+                    {% if recents %}
+                        Your latest writings.
+                    {% else %}
+                        <p>
+                            You haven't written anything yet! Why not
+                            <a href="{% url 'storyshare:write' %}">start?</a>
+                        </p>
+                    {% endif %}
+                </p>
+                {% if not no_more_writings %}
+                    <a href="{% url 'storyshare:pastwritings' %}">See more...</a>
+                {% endif %}
+                <ol>
                     {% for writing in recents %}
                         <li>
                             <a href="{% url 'storyshare:viewwriting' writing.url_id %}">{{ writing.title }} • {{ writing.time }}</a>
                         </li>
                     {% endfor %}
                 </ol>
-            </div>
         </div>
-    {% endif %}
+
+    </div>
+
 {% endblock %}
