@@ -267,3 +267,9 @@ input {
 #storyheading {
     margin: 100px auto;
 }
+
+
+/*** Write page ***/
+#wordcount {
+    font-size: 1.5em;
+}
