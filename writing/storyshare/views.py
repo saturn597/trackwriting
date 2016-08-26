@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -203,6 +204,13 @@ def register(request):
             userinfo.last_reset = timezone.now()
             userinfo.user = user
             userinfo.save()
+
+            authenticated_user = authenticate(
+                    username=user_creation_form.cleaned_data['username'],
+                    password=user_creation_form.cleaned_data['password1']
+                    )
+
+            login(request, authenticated_user)
 
             return HttpResponseRedirect(reverse('storyshare:index'))
 
