@@ -1,0 +1,23 @@
+{% extends 'writingtracker/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Write!{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.0/react.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.0/react-dom.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js" defer></script>
+    <script src="{% static 'writingtracker/write.js' %}" type="text/babel" defer></script>
+{% endblock %}
+
+{% block content %}
+<h1>Write!</h1>
+<div id="wordcount"></div>
+<form action="{% url 'writingtracker:write' %}" method="POST" id="writeform">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Save!</button>
+</form>
+
+{% endblock %}

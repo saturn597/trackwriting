@@ -1,0 +1,25 @@
+{% extends "writingtracker/base.html" %}
+
+{% block title %}Register!{% endblock %}
+
+{% block content %}
+
+{% if missing_field %}
+    A field was missing!
+{% endif %}
+
+{% if user_exists %}
+    User already exists!
+{% endif %}
+
+<form action="{% url 'writingtracker:register' %}" method="post">
+    {% csrf_token %}
+    {{ user_creation_form.as_p }}
+    {{ prefs_form.as_p }}
+
+    <div>
+        <button type="submit">Register!</button>
+    </div>
+</form>
+
+{% endblock %}

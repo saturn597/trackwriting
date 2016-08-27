@@ -1,0 +1,27 @@
+{% load staticfiles %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %} {% endblock %}</title>
+        <link href="{% static 'writingtracker/main.css' %}" rel="stylesheet" type="text/css">
+        {% block scripts %}{% endblock %}
+    </head>
+    <body>
+        <ul id="nav">
+            <li><a href="{% url 'writingtracker:index' %}">Home</a></li><!--
+            {% if user.is_authenticated %}
+                --><li><a href="{% url 'writingtracker:write' %}">Write!</a></li><!--
+                --><li><a href="{% url 'writingtracker:preferences' %}">Preferences</a></li><!--
+                --><li><a href="{% url 'writingtracker:logout' %}">Log out</a></li>
+            {% else %}
+                --><li><a href="{% url 'writingtracker:login' %}">Login</a></li><!--
+                --><li><a href="{% url 'writingtracker:register' %}">Register</a></li>
+            {% endif %}
+        </ul>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+</html>

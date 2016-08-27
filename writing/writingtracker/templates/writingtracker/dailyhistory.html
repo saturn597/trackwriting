@@ -1,0 +1,23 @@
+{% extends 'writingtracker/base.html' %}
+
+{% load staticfiles %}
+
+{% block title %}Your history{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.0/react.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.3.0/react-dom.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js" defer></script>
+    <script src="{% static 'writingtracker/history.js' %}" type="text/babel" defer></script>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'writingtracker:index' %}">Return to main page</a>
+
+<h1>Daily history</h1>
+
+<p>Click the 'newer' and 'older' buttons to view earlier or later dates.</p>
+
+<div id='daylist'>Loading...</div>
+
+{% endblock %}
