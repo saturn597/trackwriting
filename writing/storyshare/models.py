@@ -2,11 +2,8 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils import timezone
 
-import base64
 import pytz
-import uuid
 
 MAX_TZ_LENGTH = max([len(tz) for tz in pytz.common_timezones])
 
@@ -42,9 +39,9 @@ class Writing(models.Model):
     title = models.CharField(max_length=100)
 
     url_id = models.CharField(
-            max_length=10,
-            unique=True,
-            )
+        max_length=10,
+        unique=True,
+    )
 
     # The date the writing was completed in user-local time
     user_date = models.DateField()

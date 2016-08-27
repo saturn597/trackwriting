@@ -2,7 +2,6 @@ from django.conf import settings
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -20,6 +19,7 @@ import json
 import math
 import pytz
 
+
 def index(request):
     context = {}
     user = request.user
@@ -28,19 +28,19 @@ def index(request):
         return render(request, 'storyshare/landing.html')
 
     else:
-        per_page= settings.SHORT_RESULTS_PER_PAGE
+        per_page = settings.SHORT_RESULTS_PER_PAGE
 
         userinfo = user.userinfo
 
         current_user_date = get_current_user_date(user)
 
         period = [
-                current_user_date,
-                current_user_date - datetime.timedelta(days=1)
-                ]
+            current_user_date,
+            current_user_date - datetime.timedelta(days=1)
+        ]
 
         # reset the current streak if user hasn't met their goal lately
-        if not userinfo.last_goal_met in period:
+        if userinfo.last_goal_met not in period:
             userinfo.current_streak = 0
             userinfo.save()
 
@@ -50,22 +50,23 @@ def index(request):
         recents, no_more_writings = get_past_writings(user, 0, per_page)
 
         context = {
-                'today': current_user_date,
-                'todays_wordcount': words_today,
+            'today': current_user_date,
+            'todays_wordcount': words_today,
 
-                'words_by_day': daily_words,
-                'recents': recents,
-                'no_more_daily': no_more_daily,
-                'no_more_writings': no_more_writings,
+            'words_by_day': daily_words,
+            'recents': recents,
+            'no_more_daily': no_more_daily,
+            'no_more_writings': no_more_writings,
 
-                'goal': userinfo.num_words,
-                'words_left': userinfo.num_words - words_today,
+            'goal': userinfo.num_words,
+            'words_left': userinfo.num_words - words_today,
 
-                'current_streak': userinfo.current_streak,
-                'longest_streak': userinfo.longest_streak,
+            'current_streak': userinfo.current_streak,
+            'longest_streak': userinfo.longest_streak,
         }
 
     return render(request, 'storyshare/index.html', context)
+
 
 def get_daily_wordcount(user, page, step):
     userinfo = user.userinfo
@@ -85,8 +86,10 @@ def get_daily_wordcount(user, page, step):
     end = step * (page + 1)
 
     # construct a list of days representing the current period
-    period = [current_user_date - datetime.timedelta(days=x)
-            for x in range(start, end)]
+    period = [
+        current_user_date - datetime.timedelta(days=x)
+        for x in range(start, end)
+    ]
 
     period = [date for date in period if date >= last_reset_userdate]
 
@@ -118,22 +121,23 @@ def paged_daily_history(request, page):
 
     fmt = '%b. %d, %Y'
     daily_history = [{
-                'date': d.strftime(fmt),
-                'success': words_by_day[d] >= user.userinfo.num_words,
-                'today': d == current_user_date,
-            } for d in words_by_day]
+        'date': d.strftime(fmt),
+        'success': words_by_day[d] >= user.userinfo.num_words,
+        'today': d == current_user_date,
+    } for d in words_by_day]
 
     result = {
-            'noMore': no_more,
-            'content': daily_history,
-            }
+        'noMore': no_more,
+        'content': daily_history,
+    }
 
     return HttpResponse(json.dumps(result))
 
+
 def get_past_writings(user, page, step):
     writings = Writing.objects.filter(
-            author=user).order_by(
-            '-time')
+        author=user).order_by(
+        '-time')
 
     count = writings.count()
     max_page = math.ceil(count / step) - 1
@@ -143,6 +147,7 @@ def get_past_writings(user, page, step):
     past_writings = writings[start:end]
 
     return past_writings, page >= max_page
+
 
 @login_required
 def paged_past_writings(request, page):
@@ -154,20 +159,23 @@ def paged_past_writings(request, page):
 
     fmt = '%b %d, %Y, %I:%M %p'
     result = {
-            'noMore': no_more,
-            'content': [{
-                'title': w.title,
-                'time': timezone.localtime(w.time).strftime(fmt),
-                'urlId': w.url_id,
-                } for w in past_writings]}
+        'noMore': no_more,
+        'content': [{
+            'title': w.title,
+            'time': timezone.localtime(w.time).strftime(fmt),
+            'urlId': w.url_id,
+        } for w in past_writings]}
 
     return HttpResponse(json.dumps(result))
+
 
 def past_writings(request):
     return render(request, 'storyshare/pastwritings.html')
 
+
 def daily_history(request):
     return render(request, 'storyshare/dailyhistory.html')
+
 
 @login_required
 def preferences(request):
@@ -188,8 +196,9 @@ def preferences(request):
 
     return render(request, 'storyshare/preferences.html', {'form': prefs_form})
 
+
 def register(request):
-    prefs_form = PreferencesForm(initial={"timezone": "US/Eastern",})
+    prefs_form = PreferencesForm(initial={"timezone": "US/Eastern", })
     user_creation_form = UserCreationForm()
 
     if request.POST:
@@ -206,18 +215,19 @@ def register(request):
             userinfo.save()
 
             authenticated_user = authenticate(
-                    username=user_creation_form.cleaned_data['username'],
-                    password=user_creation_form.cleaned_data['password1']
-                    )
+                username=user_creation_form.cleaned_data['username'],
+                password=user_creation_form.cleaned_data['password1']
+            )
 
             login(request, authenticated_user)
 
             return HttpResponseRedirect(reverse('storyshare:index'))
 
     return render(request, 'storyshare/register.html', {
-            'user_creation_form': user_creation_form,
-            'prefs_form': prefs_form,
-        })
+        'user_creation_form': user_creation_form,
+        'prefs_form': prefs_form,
+    })
+
 
 def view_writing(request, id):
     try:
@@ -225,6 +235,7 @@ def view_writing(request, id):
     except Writing.DoesNotExist:
         w = 'Whoops, not found!'
     return render(request, 'storyshare/viewwriting.html', {'writing': w})
+
 
 @login_required
 def write(request):
@@ -240,7 +251,7 @@ def write(request):
         if not url_id:
             # generate_url_id may return None if it can't find an unused id.
             form.add_error(None, 'Something odd happened! We recommend you'
-                    ' save your work off site.')
+                                 ' save your work off site.')
 
         if form.is_valid():
             story = form.save(commit=False)
@@ -254,8 +265,10 @@ def write(request):
             yesterday = today - datetime.timedelta(days=1)
 
             # see if we met the goal for the day
-            writings_today = Writing.objects.filter(author=story.author,
-                    user_date=today)
+            writings_today = Writing.objects.filter(
+                author=story.author,
+                user_date=today)
+
             word_count_today = sum(len(w.text.split()) for w in writings_today)
             if word_count_today >= info.num_words:
                 if not info.last_goal_met or info.last_goal_met < yesterday:
@@ -272,6 +285,7 @@ def write(request):
 
     return render(request, 'storyshare/write.html', {'form': form})
 
+
 def generate_url_id():
     for _ in range(1, 10):
         url_id = urlsafe_b64encode(uuid4().bytes)[:5]
@@ -279,9 +293,11 @@ def generate_url_id():
             return url_id
     return None
 
+
 def get_date(date_time, tz):
     date = tz.normalize(date_time.astimezone(tz)).date()
     return date
+
 
 def get_current_user_date(user):
     tz = pytz.timezone(user.userinfo.timezone)
