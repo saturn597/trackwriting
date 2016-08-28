@@ -202,7 +202,7 @@ def preferences(request):
 
 
 def register(request):
-    prefs_form = PreferencesForm(initial={"timezone": "US/Eastern", })
+    prefs_form = PreferencesForm(initial={'timezone': 'US/Eastern', })
     user_creation_form = UserCreationForm()
 
     if request.POST:
@@ -213,10 +213,8 @@ def register(request):
         if user_creation_form.is_valid() and prefs_form.is_valid():
             user = user_creation_form.save()
 
-            userinfo = prefs_form.save(commit=False)
-            userinfo.last_reset = timezone.now()
-            userinfo.user = user
-            userinfo.save()
+            prefs_form = PreferencesForm(request.POST, instance=user.userinfo)
+            prefs_form.save()
 
             authenticated_user = authenticate(
                 username=user_creation_form.cleaned_data['username'],
