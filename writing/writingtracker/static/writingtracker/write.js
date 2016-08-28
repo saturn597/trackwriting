@@ -13,9 +13,9 @@ class WordCount extends React.Component {
 
     countWords() {
         var wordcount;
-        if (this.textArea.value === '') {
+        if (this.textArea.value.trim() === '') {
             // Splitting an empty string returns an array of length 1.
-            // So handle this case separately.
+            // But the correct word count is 0. So handle this case separately.
             wordcount = 0;
         } else {
             // Split the value by whitespace and count the resulting array

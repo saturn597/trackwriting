@@ -1,6 +1,10 @@
 This is a website to help people maintain a daily writing habit.
 
-They can set a goal, specifying the number of words they want to write per day.
+See it online here:
+
+[https://trackwriting.herokuapp.com/](https://trackwriting.herokuapp.com/)
+
+Users set a goal, specifying the number of words they want to write per day.
 
 If they meet this goal, the site shows a checkmark next to that date.
 

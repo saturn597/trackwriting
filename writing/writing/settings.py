@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import dj_database_url
+import json
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -26,7 +27,7 @@ SECRET_KEY = os.environ['DJANGO_SECRET']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ['DJANGO_DEBUG'] == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = json.loads(os.environ['DJANGO_ALLOWED_HOSTS'])
 
 
 # Application definition
@@ -133,7 +134,16 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 # Custom settings
-LOGIN_REDIRECT_URL = '/'
-LOGIN_URL = '/login'
 SHORT_RESULTS_PER_PAGE = 10
 LONG_RESULTS_PER_PAGE = 20
+
+
+# Login info
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login'
+
+
+# HTTPS
+SECURE_SSL_REDIRECT = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
