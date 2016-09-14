@@ -11,7 +11,7 @@
             <li><a href="{% url 'storyshare:index' %}">Home</a></li><!--
             {% if user.is_authenticated %}
                 --><li><a href="{% url 'storyshare:write' %}">Write!</a></li><!--
-                --><li><a href="{% url 'storyshare:preferences' %}">Preferences</a></li><!--
+                --><li><a href="{% url 'storyshare:reset' %}">Reset</a></li><!--
                 --><li><a href="{% url 'storyshare:logout' %}">Log out</a></li>
             {% else %}
                 --><li><a href="{% url 'storyshare:login' %}">Login</a></li><!--

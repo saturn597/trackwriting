@@ -17,7 +17,7 @@ urlpatterns = [
         { 'next_page': '/' },
         name="logout"),
 
-    url(r'^preferences$', views.preferences, name='preferences'),
+    url(r'^reset$', views.reset, name='reset'),
 
     url(r'^register$', views.register, name='register'),
 

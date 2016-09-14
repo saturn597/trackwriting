@@ -33,11 +33,11 @@ def index(request):
         tz = timezone.get_current_timezone()
         current_user_date = get_current_user_date(user)
 
-        # We'll look at a period of 1 week, but don't look at dates earlier
-        # than when the user joined.
-        join_date = get_date(user.date_joined, tz)
-        days_since_join = (current_user_date - join_date).days
-        days_back = min(10, days_since_join + 1)
+        # We'll look at a period of 10 days, but don't look at dates earlier
+        # than when the user last reset.
+        last_reset_userdate = get_date(userinfo.last_reset, tz)
+        days_since_reset = (current_user_date - last_reset_userdate).days
+        days_back = min(10, days_since_reset + 1)
 
         # construct a list of days representing the current period
         period = [current_user_date - datetime.timedelta(days=x)
@@ -46,7 +46,10 @@ def index(request):
         # get the writings from that period
         period_writings = Writing.objects.filter(
             author=request.user,
-            user_date__in=period)
+            user_date__in=period
+        ).exclude(
+            time__lt=userinfo.last_reset
+        )
 
         # assign those writings to bins according to date so they can be
         # organized in our template
@@ -91,18 +94,24 @@ def index(request):
     return render(request, 'storyshare/index.html', context)
 
 @login_required
-def preferences(request):
-    prefs_form = PreferencesForm(instance=request.user.userinfo)
-    success = False
+def reset(request):
+    userinfo = request.user.userinfo
+    prefs_form = PreferencesForm(instance=userinfo)
 
     if request.POST:
-        prefs_form = PreferencesForm(request.POST, instance=request.user.userinfo)
+        prefs_form = PreferencesForm(request.POST, instance=userinfo)
 
         if prefs_form.is_valid():
             prefs_form.save()
-            success = True
 
-    return render(request, 'storyshare/preferences.html', {'form': prefs_form, 'success': success})
+            userinfo.last_reset = timezone.now()
+            userinfo.last_goal_met = None
+            userinfo.longest_streak = 0
+            userinfo.save()
+
+            return HttpResponseRedirect(reverse('storyshare:index'))
+
+    return render(request, 'storyshare/reset.html', {'form': prefs_form})
 
 def register(request):
     prefs_form = PreferencesForm(initial={"timezone": "US/Eastern",})
@@ -115,9 +124,12 @@ def register(request):
 
         if user_creation_form.is_valid() and prefs_form.is_valid():
             user = user_creation_form.save()
-            prefs = prefs_form.save(commit=False)
-            prefs.user = user
-            prefs.save()
+
+            userinfo = prefs_form.save(commit=False)
+            userinfo.last_reset = timezone.now()
+            userinfo.user = user
+            userinfo.save()
+
             return HttpResponseRedirect(reverse('storyshare:index'))
 
     return render(request, 'storyshare/register.html', {

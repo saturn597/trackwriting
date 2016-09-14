@@ -16,6 +16,8 @@ TIMEZONE_CHOICES = [[tz, tz] for tz in pytz.common_timezones]
 class UserInfo(models.Model):
     current_streak = models.PositiveIntegerField(default=0)
 
+    last_reset = models.DateTimeField()
+
     # The date the user last completed their goal (in user-local time)
     last_goal_met = models.DateField(blank=True, null=True)
 

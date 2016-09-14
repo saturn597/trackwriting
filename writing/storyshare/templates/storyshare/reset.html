@@ -1,0 +1,26 @@
+{% extends 'storyshare/base.html' %}
+
+{% block title %}Reset{% endblock %}
+
+{% block content %}
+<h1>Reset</h1>
+
+<p>Here you can change your daily word count. You can also switch to a new timezone.</p>
+
+<strong>
+    <p>After pressing the reset button, daily successes and failures
+        that occurred before now will no longer be displayed.</p>
+
+    <p>Your current streak and your longest recorded streak will be reset to 0.</p>
+</strong>
+
+<p>Your past writings will still be saved.</p>
+
+<hr>
+
+<form action="{% url 'storyshare:reset' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Reset!</button>
+    </form>
+{% endblock %}
